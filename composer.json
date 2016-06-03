@@ -1,0 +1,22 @@
+{
+    "name": "langaner/materialized-path",
+    "description": "Materialized path trait for Laravel 5",
+    "keywords": ["laravel", "laravel-5", "path", "materialized", "tree", "eloquent", "database"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Langaner",
+            "email": "krashgt@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "~5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Langaner\\MaterializedPath\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
