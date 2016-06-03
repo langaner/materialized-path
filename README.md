@@ -91,10 +91,10 @@ Table migration example `page_table`:
 	Page::find(1)->parentByDepth()->get();
 
 	// Descendant check
-	Page::find(1)->isDescendant(Page::find(2));
+	Page::find(1)->isDescendantOf(Page::find(2));
 
 	// Ancestor check
-	Page::find(1)->isAncestor(Page::find(2));
+	Page::find(1)->isAncestorOf(Page::find(2));
 
 	// Is leaf
 	Page::find(1)->isLeaf();

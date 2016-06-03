@@ -116,14 +116,14 @@ trait MaterializedPathTrait
      */
     public function makeFirstChildOf($parentId)
     {
-        if ($this->exists and $this->isAncestor($parentId)) {
-            throw new MoveException('Cant move Ancestor to Descendant');
-        }
-
         $parent = $this->newQuery()->find($parentId);
 
         if (!$parent) {
             throw new ParentNotFoundException('Parent doesnt exist');
+        }
+
+        if ($this->exists and $this->isAncestorOf($parent)) {
+            throw new MoveException('Cant move Ancestor to Descendant');
         }
 
         $parent->childrenByDepth(1)->increment($this->getColumnTreeOrder());
@@ -170,14 +170,14 @@ trait MaterializedPathTrait
      */
     public function makeLastChildOf($parentId)
     {
-        if ($this->exists and $this->isAncestor($parentId)) {
-            throw new MoveException('Cant move Ancestor to Descendant');
-        }
-
         $parent = $this->newQuery()->find($parentId);
 
         if (!$parent) {
             throw new ParentNotFoundException('Parent doesnt exist');
+        }
+
+        if ($this->exists and $this->isAncestorOf($parent)) {
+            throw new MoveException('Cant move Ancestor to Descendant');
         }
 
         if ($this->exists) {
@@ -275,7 +275,7 @@ trait MaterializedPathTrait
      */
     protected function processSiblingOf(Model $sibling, $op)
     {
-        if ($this->exists and $this->isAncestor($sibling)) {
+        if ($this->exists and $this->isAncestorOf($sibling)) {
             throw new MoveException('Cant move Ancestor to Descendant');
         }
 
@@ -428,7 +428,7 @@ trait MaterializedPathTrait
      *
      * @throws \Langaner\MaterializedPath\Exceptions\ModelNotFoundException
      */
-    public function isDescendant(Model $ancestor)
+    public function isDescendantOf(Model $ancestor)
     {
         if (!$this->exists) {
             throw new ModelNotFoundException('Model doesnt exist');
@@ -447,7 +447,7 @@ trait MaterializedPathTrait
      * 
      * @throws \Langaner\MaterializedPath\Exceptions\ModelNotFoundException
      */
-    public function isAncestor(Model $descendant)
+    public function isAncestorOf(Model $descendant)
     {
         if (!$this->exists) {
             throw new ModelNotFoundException('Model doesnt exist');
