@@ -665,6 +665,16 @@ trait MaterializedPathTrait
     }
 
     /**
+     * Get alias column.
+     * 
+     * @return string
+     */
+    public function getColumnAlias()
+    {
+        return $this->columnAlias;
+    }
+
+    /**
      * Set parent id column.
      * 
      * @return string
@@ -712,6 +722,16 @@ trait MaterializedPathTrait
     public function setColumnTreeDepth($name)
     {
         $this->columnTreeDepth = $name;
+    }
+
+    /**
+     * Set alias column.
+     * 
+     * @return string
+     */
+    public function setColumnAlias($name)
+    {
+        $this->columnAlias = $name;
     }
 
     /**
