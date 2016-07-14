@@ -95,8 +95,8 @@ trait MaterializedPathTrait
             $this->getColumnTreePath() => $this->separator.'0'.$this->separator,
             $this->getColumnTreePid() => null,
             $this->getColumnTreeDepth() => 0,
-            $this->getColumnTreeRealPath() => 'root',
-            $this->getColumnAlias() => 'root',
+            $this->getColumnTreeRealPath() => $this->{$this->columnAlias} == '' ? 'root' : $this->{$this->columnAlias},
+            $this->getColumnAlias() => $this->{$this->columnAlias} == '' ? 'root' : $this->{$this->columnAlias},
             $this->getColumnTreeOrder() => (static::allRoot()->max($this->getColumnTreeOrder()) + 1)
         ]);
 
