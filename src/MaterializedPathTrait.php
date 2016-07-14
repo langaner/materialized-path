@@ -739,20 +739,21 @@ trait MaterializedPathTrait
      *
      * @param  int $parentId
      * @param  Collection $nodes
+     * @param  int $level
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function scopeBuildChidrenTree($query, $parentId = null, $nodes = null)
+    public function scopeBuildChidrenTree($query, $parentId = null, $nodes = null, $level = null)
     {
         $tree = new Collection;
         $parentId = $parentId === null ? $this->id : $parentId;
 
         if ($nodes === null) {
-            $nodes = $this->childrenByDepth()->orderBy($this->getColumnTreeOrder(), 'ASC')->get();
+            $nodes = $this->childrenByDepth($level)->orderBy($this->getColumnTreeOrder(), 'ASC')->get();
         }
 
         foreach ($nodes as $node) {
             if($node->parent_id == $parentId) {
-                $children = $node->buildChidrenTree($node->id, $nodes);
+                $children = $node->buildChidrenTree($node->id, $nodes, $level);
                 $node->children = $children;
                 $tree->add($node);
             }
@@ -764,22 +765,23 @@ trait MaterializedPathTrait
     /**
      * Build tree scope.
      *
-     * @param int $rootId
+     * @param int $parentId
+     * @param  int $level
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function scopeBuildTree($query, $rootId = null)
+    public function scopeBuildTree($query, $parentId = null, $level = null)
     {
         $tree = new Collection;
         
-        if (is_null($rootId)) {
+        if (is_null($parentId)) {
             $roots = static::allRoot();
         } else {
-            $roots = $this->newQuery()->with('translations')->where('id', $rootId);
+            $roots = $this->newQuery()->with('translations')->where('id', $parentId);
         }
         
         if ($roots->count() > 0) {
             foreach ($roots->orderBy($this->getColumnTreeOrder(), 'ASC')->get() as $root) {
-                $children = $root->buildChidrenTree($root->id, null);
+                $children = $root->buildChidrenTree($root->id, null, $level);
                 $root->children = $children;
                 $tree->add($root);
             }
