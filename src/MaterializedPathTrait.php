@@ -764,19 +764,20 @@ trait MaterializedPathTrait
     /**
      * Build tree scope.
      *
+     * @param int $rootId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function scopeBuildTree($query)
+    public function scopeBuildTree($query, $rootId = null)
     {
         $tree = new Collection;
-        $roots = static::allRoot();
-        $config = $this->getConfig();
+        
+        if (is_null($rootId)) {
+            $roots = static::allRoot();
+        } else {
+            $roots = $this->newQuery()->with('translations')->where('id', $rootId);
+        }
         
         if ($roots->count() > 0) {
-            if ($config->get('materialized_path.with_translations') == true && method_exists($roots->getModel(), 'translations')) {
-                $roots = $roots->with('translations');
-            }
-            
             foreach ($roots->orderBy($this->getColumnTreeOrder(), 'ASC')->get() as $root) {
                 $children = $root->buildChidrenTree($root->id, null);
                 $root->children = $children;
