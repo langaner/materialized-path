@@ -845,7 +845,15 @@ trait MaterializedPathTrait
         if (is_null($parentId)) {
             $roots = static::allRoot();
         } else {
-            $roots = $this->newQuery()->with('translations')->where('id', $parentId);
+            $config = $this->getConfig();
+
+            $roots = $this->newQuery();
+
+            if ($config->get('materialized_path.with_translations') === true && method_exists($roots->getModel(), 'translations')) {
+                $query = $roots->with('translations');
+            }
+
+            $roots = $roots->where('id', $parentId);
         }
         
         if ($roots->count() > 0) {
